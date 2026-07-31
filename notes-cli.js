@@ -21,23 +21,32 @@ const rl = readline.createInterface({
 const command = process.argv[2]; // e.g "add"
 const noteText = process.argv[3]; // e.g "Buy groceries"
 
-const data = {
-  text: "hello world",
-};
-
 // if the command is "node notes-cli.js" then the below will run
 if (command === "add") {
-  
+  const data = [];
+
   // here the noteText in the param will have the data which is passed by user
   // and below we are using that data to add it in the notes.json file
   rl.question("enter note text : ", (noteText) => {
-    data.text = noteText;
+    
+    let id = 0;
+    const createdAt = new Date().toISOString();
+    
+    const userMadeData = {
+      id: id,
+      createdAt: createdAt,
+      noteText: noteText,
+    };
+
+    data.push(userMadeData)
 
     // adding data.text into notes.json file
     fs.writeFile("notes.json", JSON.stringify(data), (error) => {
       if (error) return;
     });
 
+    // increment id by 1 for adding unique id everytime user enter note
+    id++;
     rl.close();
   });
 }

@@ -1,8 +1,25 @@
-const readline = require("readline");
+const data = [];
 
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+const note = {
+  id: 1,
+  createdAt: 2,
+  noteText: 2,
+};
 
-rl.question("What is your name? ", (answer) => {
-  console.log("Hello, " + answer);
-  rl.close();
-});
+const note1 = {
+  id: 1,
+  createdAt: 2,
+  noteText: 2,
+};
+
+const note2 = {
+  id: 1,
+  createdAt: 2,
+  noteText: 2,
+};
+
+data.push(note)
+data.push(note1)
+data.push(note2)
+
+console.log(data);

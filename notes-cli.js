@@ -1,21 +1,5 @@
-// CLI notes that stores data into notes.json using file system
-
-// Add a note
-// node notes-cli.js add "Buy groceries"
-
-// If notes.json doesn't exist yet, create it (writeFile)
-// If it exists, read it, parse the JSON, push the new note, write it back
-// Each note should have an id, text, and createdAt
-
 const fs = require("fs");
 const path = require("path");
-
-// importing readline for taking input from user in terminal
-const readline = require("readline");
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
 
 // for adding note commands
 const command = process.argv[2]; // e.g "add"
@@ -23,30 +7,49 @@ const noteText = process.argv[3]; // e.g "Buy groceries"
 
 // if the command is "node notes-cli.js" then the below will run
 if (command === "add") {
-  const data = [];
+  // validation condition if the noteText isnt provided then it will trow error
+  if (noteText == undefined) {
+    console.log("please enter note");
+    return;
+  }
+
+  let data = [];
+
+  // check if the notStrictEqual.json file exist
+  if (fs.promises.access("notes.json")) {
+    // then we are getting that data
+    fs.readFile("notes.json", async (error, existingData) => {
+      
+      if (error) return;
+      await data.push(existingData.toString())
+
+      console.log("inside async");
+      
+    });
+  }
+
+  console.log("outside async");
 
   // here the noteText in the param will have the data which is passed by user
   // and below we are using that data to add it in the notes.json file
-  rl.question("enter note text : ", (noteText) => {
+  let id = 0;
+  const createdAt = new Date().toISOString();
+
+  const note = {
+    id: id,
+    createdAt: createdAt,
+    noteText: noteText,
+  };
+
+  data.push(note);
+
+  // adding data.text into notes.json file
+  fs.writeFile("notes.json", JSON.stringify(data), (error) => {
+    if (error) return;
     
-    let id = 0;
-    const createdAt = new Date().toISOString();
-    
-    const userMadeData = {
-      id: id,
-      createdAt: createdAt,
-      noteText: noteText,
-    };
-
-    data.push(userMadeData)
-
-    // adding data.text into notes.json file
-    fs.writeFile("notes.json", JSON.stringify(data), (error) => {
-      if (error) return;
-    });
-
-    // increment id by 1 for adding unique id everytime user enter note
-    id++;
-    rl.close();
+    console.log("note added succesfully");
   });
+
+  // increment id by 1 for adding unique id everytime user enter note
+  id++;
 }

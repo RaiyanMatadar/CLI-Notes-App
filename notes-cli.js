@@ -12,11 +12,14 @@ const createdAt = new Date();
 // this notes obj will hold data of single note everytime i run 
 // - node notes-cli.js add "show"
 const notes = {
-  id: id,
+  id: id++,
   noteText: noteText,
   createdAt: createdAt
 }
 
+// everytime i make new note, it will pushed to existingNotes array
+let existingNotes = []
+existingNotes.push(notes)
 
 // if the command is "node notes-cli.js add" then the below will run
 if (command === "add") {
@@ -32,26 +35,20 @@ if (command === "add") {
     if (fs.existsSync(configPath)) {
 
       // read the whole file and add that data into `data` param
-      fs.readFile(configPath, (error, data) => {
+      fs.readFile(configPath, "utf-8", (error, data) => {
         if (error) return console.log(error);
 
-        // everytime i make new note, it will pushed to existingNotes array
-        let existingNotes = []
-        existingNotes.push(notes)
-        
-      
-        // if `notes.json` has data then we will send notes.json 
-        // data into existingNotes variable as an object 
+        // this will parse the new data to the `notes.json` file 
         if (data.length > 0) {
-          existingNotes.push(JSON.parse(data))
+          existingNotes = JSON.parse(data);
+          existingNotes.push(notes);
           console.log(existingNotes);
+          
         }
-        
+
 
         fs.writeFile(configPath, JSON.stringify(existingNotes, null, 2), (error) => {
           if (error) return
-
-          
         })
       })
 

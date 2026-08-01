@@ -2,20 +2,6 @@
   {
     "id": 0,
     "noteText": "nice",
-    "createdAt": "2026-08-01T13:11:51.363Z"
-  },
-  [
-    {
-      "id": 0,
-      "noteText": "bro",
-      "createdAt": "2026-08-01T13:11:44.079Z"
-    },
-    [
-      {
-        "id": 0,
-        "noteText": "name",
-        "createdAt": "2026-08-01T13:07:10.125Z"
-      }
-    ]
-  ]
+    "createdAt": "2026-08-01T15:11:58.701Z"
+  }
 ]

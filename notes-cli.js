@@ -1,18 +1,17 @@
 const fs = require("fs");
 const path = require("path");
+const crypto = require('crypto');
 const configPath = path.join(__dirname, 'notes.json');
 
 // for adding note commands
 const command = process.argv[2]; // e.g "add"
-
-let id = 0;
 const noteText = process.argv[3]; // e.g "Buy groceries"
 const createdAt = new Date();
 
 // this notes obj will hold data of single note everytime i run 
 // - node notes-cli.js add "show"
 const notes = {
-  id: id++,
+  id: crypto.randomUUID(),
   noteText: noteText,
   createdAt: createdAt
 }
@@ -42,8 +41,6 @@ if (command === "add") {
         if (data.length > 0) {
           existingNotes = JSON.parse(data);
           existingNotes.push(notes);
-          console.log(existingNotes);
-          
         }
 
 
@@ -54,7 +51,7 @@ if (command === "add") {
 
 
     } else {
-      fs.writeFile(configPath, JSON.stringify(notes), (error) => {
+      fs.writeFile(configPath, JSON.stringify([notes]), (error) => {
         if (error) return console.log(error);
       })
     }

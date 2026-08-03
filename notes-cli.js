@@ -77,3 +77,26 @@ if (command === "list") {
 
   })
 }
+
+if (command === "remove") {
+  // validation condition if the noteText isnt provided then it will trow error
+  if (noteText == undefined) {
+    console.log("please enter id number");
+    return;
+  }
+
+  // read the file and get the data 
+  fs.readFile(configPath, (error, data) => {
+
+    // converting string data into object
+    const notesList = JSON.parse(data)
+
+    // removing specific data using index of it  e.g - "node notes-cli.js remove 1"
+    const removedNote = notesList.filter((note, index) => index != (noteText - 1))
+
+    // overridning the data which we got from removedNote and adding it to the `notes.json` file    
+    fs.writeFile(configPath, JSON.stringify(removedNote), (error) => {
+      if (error) return
+    })
+  })
+}

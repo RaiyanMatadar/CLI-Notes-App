@@ -64,18 +64,30 @@ if (command === "add") {
 }
 
 if (command === "list") {
-  fs.readFile(configPath, (error, data) => {
-    if (error) return console.error(error)
 
-    const notesList = JSON.parse(data);
-    notesList.forEach((note, index) => {
-      console.log(`Note ${index + 1}`);
-      console.log(`   ${note.noteText}`);
-      console.log(`   ${new Date(note.createdAt).toLocaleString()}`);
-      console.log("----------------------------------");
-    });
+  if (fs.existsSync(configPath)) {
 
-  })
+    fs.readFile(configPath, (error, data) => {
+      if (error) return console.error(error)
+
+      const notesList = JSON.parse(data);
+
+      // if the data is empty then user ont be able to see list 
+      if (notesList.length == 0) {
+        console.log("No data exist, Create notes for viewing");
+        return
+      }
+
+      notesList.forEach((note, index) => {
+        console.log(`Note ${index + 1}`);
+        console.log(`   ${note.noteText}`);
+        console.log(`   ${new Date(note.createdAt).toLocaleString()}`);
+        console.log("----------------------------------");
+      });
+    })
+  } else {
+    console.log("No data exist, Create notes for viewing");
+  }
 }
 
 if (command === "remove") {
@@ -119,6 +131,37 @@ if (command === "archive") {
           if (error) return
         })
       })
+      console.log("archived sucesfully");
     })
   })
+}
+
+if (command === "stats") {
+
+  if (fs.existsSync(configPath)) {
+    fs.stat(configPath, (error, stats) => {
+      if (error) return console.log(error);
+
+      const statDate = new Date(stats.birthtimeMs);
+      console.log(`Size : ${stats.size}`);
+      console.log(`Time : ${statDate}`);
+
+    });
+  } else {
+    console.log("notes doesnt exist, add notes to view the internals");
+  }
+}
+
+if (command === "clear") {
+  fs.unlink(configPath, (error) => {
+    if (error) return
+  })
+
+  fs.rm("archive", { recursive: true }, (error) => {
+    if (error) {
+      console.log("Error:", error);
+      return;
+    }
+    console.log("Deleted!");
+  });
 }

@@ -8,18 +8,6 @@ const command = process.argv[2]; // e.g "add"
 const noteText = process.argv[3]; // e.g "Buy groceries"
 const createdAt = new Date();
 
-// this notes obj will hold data of single note everytime i run 
-// - node notes-cli.js add "show"
-const notes = {
-  id: crypto.randomUUID(),
-  noteText: noteText,
-  createdAt: createdAt
-}
-
-// everytime i make new note, it will pushed to existingNotes array
-let existingNotes = []
-existingNotes.push(notes)
-
 // if the command is "node notes-cli.js add" then the below will run
 if (command === "add") {
 
@@ -28,6 +16,19 @@ if (command === "add") {
     console.log("please enter note");
     return;
   }
+
+  // this notes obj will hold data of single note everytime i run 
+  // - node notes-cli.js add "show"
+  const notes = {
+    id: crypto.randomUUID(),
+    noteText: noteText,
+    createdAt: createdAt
+  }
+
+  // everytime i make new note, it will pushed to existingNotes array
+  let existingNotes = []
+  existingNotes.push(notes)
+
 
   try {
     // if file `notes.json` exist then add data else make the `notes.json` file  
@@ -60,4 +61,19 @@ if (command === "add") {
     console.log("this is catch error ", error);
   }
 
+}
+
+if (command === "list") {
+  fs.readFile(configPath, (error, data) => {
+    if (error) return console.error(error)
+
+    const notesList = JSON.parse(data);
+    notesList.forEach((note, index) => {
+      console.log(`Note ${index + 1}`);
+      console.log(`   ${note.noteText}`);
+      console.log(`   ${new Date(note.createdAt).toLocaleString()}`);
+      console.log("----------------------------------");
+    });
+
+  })
 }

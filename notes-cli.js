@@ -100,3 +100,25 @@ if (command === "remove") {
     })
   })
 }
+
+if (command === "archive") {
+
+  // it will make directory named `archive/` 
+  fs.mkdir("archive/", { recursive: true }, (error) => {
+    if (error) return
+
+    fs.readFile("notes.json", (error, data) => {
+      if (error) return
+
+      // converting string data into object
+      const notesList = JSON.parse(data)
+
+      // making new files for each notes and passing data to each file 
+      notesList.forEach((note, index) => {
+        fs.writeFile(`archive/${index + 1}.json`, JSON.stringify(note), (error) => {
+          if (error) return
+        })
+      })
+    })
+  })
+}
